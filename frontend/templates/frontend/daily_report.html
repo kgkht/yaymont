@@ -1,0 +1,110 @@
+{% extends 'master.html' %}
+{% load static %}
+
+{% block Hscript %}
+  <script type="text/javascript" src="{% static 'frontend/js/loader.chart.js' %}"></script>
+  
+  <div class="">
+	{% for Egg in totalEgg %}
+		<span class="eggCount" id="{{Egg.p_count}}"></span>
+	{% endfor %}
+  </div>
+  
+    <div class="">
+	{% for Simple in totalSimple %}
+		<span class="simpleCount" id="{{Simple.p_count}}"></span>
+	{% endfor %}
+  </div>
+  
+  
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+		  let Eggtotal = 0;
+  $('.eggCount').each(function() {
+  Eggtotal +=  parseInt(this.id, 10);
+  });
+  $('#eggSell').html(Eggtotal);
+  $('#eggSellTotal').html(Eggtotal * 400 +" ကျပ်");
+ 
+  let Simpletotal = 0;
+  $('.simpleCount').each(function() {
+  Simpletotal +=  parseInt(this.id, 10);
+  });
+  $('#simpleSell').html(Simpletotal);
+  $('#simpleSellTotal').html(Simpletotal * 200 +" ကျပ်");
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['ရိုးရိုး',     Simpletotal],
+          ['ကြက်ဉ',      Eggtotal],
+        ]);
+
+        var options = {
+          title: ''
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock %}
+
+{% block content %}
+	<div class='container'>
+		<h5 style="margin-top: 15px;">ယနေ့ ရောင်းချမှုဇယား</h5>
+		<div id="piechart" style="width: 320px; height: auto;"></div>
+		
+		
+		<div class="myRow">
+			<div class="one-third-column" style="box-shadow:none;">
+			 ရိုးရိုး : <span id='simpleSell'></span> ခု  <br>
+			 ပေါင်း : <strong id='simpleSellTotal'> </strong>
+			</div>
+			<div class="one-third-column" style="box-shadow:none;">
+			ကြက်ဉ : <span id='eggSell'></span> ခု <br>
+			ပေါင်း : <strong id='eggSellTotal'></strong>
+			</div>
+			
+		</div>
+		<hr>
+		
+
+		<div class="container">
+		
+		<table class="u-full-width">
+		<thead>
+			<tr>
+				<th> နာမည် </th>
+				<th> အမျိုးအစား</th>
+				<th style="text-align: center;"> အခု ရေ</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+			{% for order in dailylist %}
+				<tr>
+					<td><a style="color: #333;" href="{% url 'frontend:itemUpdate' order.order_id %}">{{order.name}}</a></td>
+										<td>  	{% if order.p_type == 'E' %} 
+								<strong style="color: orange;"> ကြက်ဉ 
+							{% else %} <strong> ရိုးရိုး{% endif %} </strong>
+					</td>
+					<td style="text-align: center;" class="ycount" id="{{order.p_count}}">{{order.p_count}}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+		
+		</div>
+	</div>
+	<style>
+	#eggSell, #simpleSell{
+		padding: 5px;
+		font-size: 18px;
+		font-weight: bold;
+		}
+	</style>
+{% endblock %}
+

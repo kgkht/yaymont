@@ -1,0 +1,119 @@
+{% extends 'master.html' %}
+{% load static %}
+{% block content %}
+  <div class="container" style="margin-top:10px;" >
+	 {% if user.is_authenticated %}
+	 <a href="{% url 'frontend:todayLedger'%}" class="button">ပြန်စစ်</a>
+	 {% else %}
+    <a href="tel:09260054792" class="button">09260054792</a>
+    {% endif %}
+	  <button onClick="location.reload()" style="float:right;" class="button button-primary"> Refresh 
+		{% if user.is_authenticated %}
+	  (<span id='tminus'> 30 </span>)
+	  <script> setInterval(()=>{ t = parseInt($('#tminus').text(), 10); t--;  $('#tminus').html(t); },1000); </script></button>
+	  {% endif %}
+  </div>
+  
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+	  
+    <div class="row">
+      <div class="one-half column">
+        <h5>ရေမုန့်  ကြိုမှာထားသည့်စာရင်း</h5>
+        <h6 style="text-align:right;color: gold;"> ဆိုင်ဖွင့်ချိန် (နေ့လည် ၂နာရီ)</h6>
+	{% if not user.is_authenticated %}
+	<div style="padding:15px;padding-bottom:0px; margin-bottom: 15px; background: #fff; box-shadow: 0px 1px 5px #ccc;">
+	<div class="row">
+	  <div class="columns" style="width: 45%; text-align: center;">
+	    <img width=100 height=100 src="{% static 'frontend/images/simple.jpg' %}" alt="Simple Yaymont" />
+	    <h6> ရိုးရိုး = 200 ကျပ် </h6>
+	  </div>
+	  
+	  <div class="columns" style="width: 45%; text-align: center;">
+	    <img width=100 height=100 src="{% static 'frontend/images/egg.jpg' %}" alt="Egg Plus"/>
+	    <h6> ကြက်ဉနဲ့ = 400 ကျပ် </h6>
+	  </div>
+	</div>
+	</div>  
+	{% endif %}
+	
+	  {% if user.is_authenticated %}
+	<table class="u-full-width" >
+		<thead>
+			<tr>
+				<th> နာမည် </th>
+				<th> အမျိုး </th>
+				<th> အခု </th>
+				<th> လုပ်ဆောင်</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for order in allorders %}
+				<tr>
+					<td><a style="color: #333;" href="{% url 'frontend:itemUpdate' order.order_id %}">{{order.name}}</a></td>
+					<td>  	{% if order.p_type == 'E' %} 
+								<strong style="color: orange;"> ကြက်ဉ 
+							{% else %} <strong> ရိုးရိုး{% endif %} </strong>
+					</td>
+					<td class="ycount" id="{{order.p_count}}">{{order.p_count}}</td>
+					<td><a onClick="orderComplete('{% url 'frontend:itemComplete' order.order_id%}')" 
+							style="cursor: pointer; padding:5px; border:1px solid; border-radius:5px;background: green;color: #fff;">ပြီးပြီ</a> 
+						<a href="{% url 'frontend:itemDelete' order.order_id %}" style="color: red;padding: 10x;">ဖျက်</a></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	  {% else %}
+	  <ul>
+	    {% for order in allorders %}
+	    <li style="font-size: 14px; text-decoration:underline;" class="ycount" id="{{order.p_count}}"> 
+			{{order.p_count}} Item{% if order.p_count > 1 %}s{%endif%}  </li> 
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
+	<p style="font-size: 16px;text-align:right; padding: 5px; border:1px solid #333; border-radius: 5px;">
+	  စောင့်ရမည့်အရေအတွက် : <span id="tcount" style="font-size: 34px;"></span> ခု<br>
+
+	</p>   
+	<hr>
+      </div>
+
+      <div class="one-half column">
+		 
+	<h5> <strong>အောက်ကဖောင်ဖြည့်ပြီး ကြိုမှာထားလို့ရပြီ  </strong></h5>
+
+	<form action="{% url 'frontend:home' %}" method="post" id="orderF">
+	  {%csrf_token%}
+	  {{form.as_ul}} <br>
+	  <input class="button button-primary" type="submit"  value="Submit">
+	</form>
+
+      </div>
+      
+    </div>
+  </div>
+{% endblock %}
+
+{% block Cscript %}
+
+<script>
+
+  
+  function orderComplete(completeURL){
+	  var r = confirm('ပြီးတာသေချာပြီလား');
+	  
+	  if(r == true){
+		window.location.href = completeURL;  
+	  }else{
+		
+		}
+  };
+  
+  function setAlter(){
+	  
+	  }
+</script>
+{% endblock %}

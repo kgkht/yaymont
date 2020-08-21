@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>YayMont Order</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+       –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'frontend/css/normalize.css' %}">
+  <link rel="stylesheet" href="{% static 'frontend/css/skeleton.css' %}">
+
+  <!-- Favicon
+       –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+  <link rel="icon" type="image/png" href="{% static 'frontend/images/favicon.png' %}">
+	{% block Hscript %} {% endblock %}
+</head>
+<body onload="showtotal()">
+	<div class="mainWrap">
+		{% block content %}{% endblock %}
+	</div>
+	{% if user.is_authenticated %}
+	<div class="admin-helper">
+		<div class="myRow">
+			<div class="one-third-column">
+				<a href="{% url 'frontend:home' %}">အော်ဒါ</a>
+			</div>
+			<div class="one-third-column">
+				<a href="{% url 'frontend:todayLedger'%}">နေ့စဉ်</a>
+			</div>
+			<div class="one-third-column">
+				<a href="">ဆိုင်ပြင်</a>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+</body>
+<script
+			  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+			  crossorigin="anonymous"></script>
+
+  {% block Cscript %}<!-- default content text (typically empty) -->{% endblock %}
+  
+  <script>
+    function showtotal(){
+  let total = 0;
+  $('.ycount').each(function() {
+  total +=  parseInt(this.id, 10);
+  });
+  $('#tcount').html(total);
+  {% if user.is_authenticated %}
+	setTimeout(()=>{ location.reload(); }, 30000);
+  {% endif %}
+    
+  };
+  </script>
+<style>
+  #orderF{
+  border:1px solid #ddd;
+  padding:30px;
+  
+  }
+  .admin-helper{
+	  position: fixed;
+	  bottom: 0px;
+	  left:0;
+	  right: 0;
+	  z-index: 9;
+	  background: #fafafa;
+	  box-shadow: 1px 0px 3px #ccc;
+  }
+  .myRow{
+		position: relative;
+		display: flex;
+		flex-direction: row;
+	  }
+	.one-third-column{
+			flex: 1;
+			text-align: center;
+			box-shadow: 0px 3px 1px #333;
+			
+		}
+		
+	.one-third-column a{
+		color: #333;
+		font-weight: bold;
+		font-size: 14px;
+		display: block;
+		padding: 10px 5px;
+		background: #eee;
+	}
+	.mainWrap{
+		margin-bottom: 50px;
+	}
+</style>
+
+</html>

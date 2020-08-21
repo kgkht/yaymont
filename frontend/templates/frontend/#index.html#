@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>YayMont Order</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+       –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'frontend/css/normalize.css' %}">
+  <link rel="stylesheet" href="{% static 'frontend/css/skeleton.css' %}">
+
+  <!-- Favicon
+       –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+  <link rel="icon" type="image/png" href="{% static 'frontend/images/favicon.png' %}">
+
+</head>
+<body onload="showtotal()">
+  <div class="container" style="margin-top:10px;">
+    <a href="tel:09260054792" class="button">Call : 09260054792</a>
+	  <button onClick="location.reload()" style="float:right;" class="button button-primary"> Refresh </button>
+  </div>
+  
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div class="one-half column">
+        <h4>YayMont Pre-Order-List</h4>
+	
+	<div style="padding:15px;padding-bottom:0px; background: #fff; box-shadow: 0px 1px 5px #ccc;">
+	<div class="row">
+	  <div class="columns" style="width: 45%; text-align: center;">
+	    <img width=100 height=100 src="{% static 'frontend/images/simple.jpg' %}" alt="Simple Yaymont" />
+	    <h6> Simple = 200 MMK </h6>
+	  </div>
+	  
+	  <div class="columns" style="width: 45%; text-align: center;">
+	    <img width=100 height=100 src="{% static 'frontend/images/egg.jpg' %}" alt="Egg Plus"/>
+	    <h6> Egg Plus = 400 MMK </h6>
+	  </div>
+	</div>
+	</div>  
+	<p>
+	  {% if user.is_authenticated %}
+	  
+	  {% else %}
+	  <ul>
+	    {% for order in allorders %}
+	    <li style="font-size: 14px; text-decoration:underline;" class="ycount" id="{{order.p_count}}"> {{order.p_count}} Item{% if order.p_count > 1 %}s{%endif%}  </li> 
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
+	<p style="font-size: 16px;text-align:right; padding: 5px; border:1px solid #333; border-radius: 5px;">
+	  Totally Wait : <span id="tcount" style="font-size: 34px;">
+
+	  </span> Items<br>
+
+	</p>
+	
+	</p>
+   
+      </div>
+
+      <div class="one-half column">
+	<h3> Fill Form and get Order </h3>
+
+	<form action="{% url 'frontend:home' %}" method="post" id="orderF">
+	  {%csrf_token%}
+	  {{form.as_p}} <br>
+	  <input class="button button-primary" type="submit"  value="Submit">
+	</form>
+
+      </div>
+      
+    </div>
+  </div>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+<script
+			  src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+			  crossorigin="anonymous"></script>
+<script>
+  function showtotal(){
+  let total = 0;
+  $.each($('.ycount'), function() {
+  total +=  parseInt(this.id, 10);
+
+  });
+  
+  $('#tcount').html(total);
+  }
+</script>
+<style>
+  #orderF{
+  border:1px solid #ddd;
+  padding:30px;
+  }
+</style>
+
+</html>
